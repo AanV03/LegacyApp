@@ -15,36 +15,216 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Post {
-  id        Int      @id @default(autoincrement())
-  name      String
+// ============================================================================
+// ENUMS FOR TASK MANAGEMENT
+// ============================================================================
+
+enum TaskStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
+enum TaskPriority {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+enum HistoryAction {
+  CREATED
+  STATUS_CHANGED
+  TITLE_CHANGED
+  ASSIGNED
+  PRIORITY_CHANGED
+  DUE_DATE_CHANGED
+  DELETED
+}
+
+enum NotificationType {
+  TASK_ASSIGNED
+  TASK_UPDATED
+  COMMENT_ADDED
+  TASK_COMPLETED
+  PROJECT_CREATED
+  PROJECT_DELETED
+  TASK_CREATED
+  TASK_DELETED
+  TASK_STATUS_CHANGED
+}
+
+enum SystemEventType {
+  PROJECT_CREATED
+  PROJECT_DELETED
+  TASK_CREATED
+  TASK_UPDATED
+  TASK_DELETED
+  COMMENT_ADDED
+}
+
+enum UserRole {
+  USER
+  ADMIN
+}
+
+// ============================================================================
+// EXISTING MODELS
+// ============================================================================
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  username      String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  password      String?
+  role          UserRole  @default(USER)
+
+  // Task Management Relations
+  projects      Project[]
+  accounts      Account[]
+  sessions      Session[]
+  tasksCreated  Task[]         @relation("CreatedTasks")
+  tasksAssigned Task[]         @relation("AssignedTasks")
+  comments      Comment[]
+  history       History[]
+  notifications Notification[]
+}
+
+// ============================================================================
+// NEW MODELS FOR TASK MANAGEMENT
+// ============================================================================
+
+model Project {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String?
+  createdBy   User     @relation(fields: [createdById], references: [id], onDelete: Cascade)
+  createdById String
+  tasks       Task[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([createdById])
+}
+
+model Task {
+  id          Int          @id @default(autoincrement())
+  title       String
+  description String?
+  status      TaskStatus   @default(PENDING)
+  priority    TaskPriority @default(MEDIUM)
+
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  projectId Int
+
+  assignedTo   User?   @relation("AssignedTasks", fields: [assignedToId], references: [id], onDelete: SetNull)
+  assignedToId String?
+
+  createdBy   User   @relation("CreatedTasks", fields: [createdById], references: [id], onDelete: Cascade)
+  createdById String
+
+  dueDate        DateTime?
+  estimatedHours Float     @default(0)
+  actualHours    Float     @default(0)
+
+  comments Comment[]
+  history  History[]
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  createdBy   User   @relation(fields: [createdById], references: [id])
-  createdById String
-
-  @@index([name])
+  @@index([projectId])
+  @@index([assignedToId])
+  @@index([createdById])
 }
 
-// Necessary for Next auth
+model Comment {
+  id        Int      @id @default(autoincrement())
+  text      String
+  task      Task     @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  taskId    Int
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  createdAt DateTime @default(now())
+
+  @@index([taskId])
+  @@index([userId])
+}
+
+model History {
+  id        Int           @id @default(autoincrement())
+  task      Task          @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  taskId    Int
+  user      User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  action    HistoryAction
+  oldValue  String?
+  newValue  String?
+  timestamp DateTime      @default(now())
+
+  @@index([taskId])
+  @@index([userId])
+  @@index([timestamp])
+}
+
+model Notification {
+  id        Int              @id @default(autoincrement())
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  message   String
+  type      NotificationType
+  read      Boolean          @default(false)
+  createdAt DateTime         @default(now())
+
+  @@index([userId])
+  @@index([read])
+}
+
+model SystemEvent {
+  id          Int             @id @default(autoincrement())
+  type        SystemEventType
+  userId      String
+  userName    String?
+  projectId   Int?
+  taskId      Int?
+  action      String // Descripción de la acción
+  details     String? // JSON con detalles adicionales
+  processed   Boolean         @default(false)
+  createdAt   DateTime        @default(now())
+  processedAt DateTime?
+
+  @@index([processed])
+  @@index([createdAt])
+  @@index([userId])
+}
+
+// ---------------------------------------------------------------------------
+// NextAuth models required by `@auth/prisma-adapter`
+// See: https://next-auth.js.org/adapters/prisma
+// ---------------------------------------------------------------------------
+
 model Account {
-  id                       String  @id @default(cuid())
-  userId                   String
-  type                     String
-  provider                 String
-  providerAccountId        String
-  refresh_token            String? // @db.Text
-  access_token             String? // @db.Text
-  expires_at               Int?
-  token_type               String?
-  scope                    String?
-  id_token                 String? // @db.Text
-  session_state            String?
-  user                     User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-  refresh_token_expires_in Int?
+  id                Int     @id @default(autoincrement())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
+  @@index([userId])
 }
 
 model Session {
@@ -52,18 +232,10 @@ model Session {
   sessionToken String   @unique
   userId       String
   expires      DateTime
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-}
 
-model User {
-  id            String    @id @default(cuid())
-  name          String?
-  email         String?   @unique
-  emailVerified DateTime?
-  image         String?
-  accounts      Account[]
-  sessions      Session[]
-  posts         Post[]
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
 }
 
 model VerificationToken {

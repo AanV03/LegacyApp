@@ -18,18 +18,18 @@ export const postRouter = createTRPCRouter({
   create: protectedProcedure
     .input(z.object({ name: z.string().min(1) }))
     .mutation(async ({ ctx, input }) => {
-      return ctx.db.post.create({
+      return ctx.db.project.create({
         data: {
           name: input.name,
-          createdBy: { connect: { id: ctx.session.user.id } },
+          createdById: ctx.session.user.id,
         },
       });
     }),
 
   getLatest: protectedProcedure.query(async ({ ctx }) => {
-    const post = await ctx.db.post.findFirst({
-      orderBy: { createdAt: "desc" },
-      where: { createdBy: { id: ctx.session.user.id } },
+    const post = await ctx.db.project.findFirst({
+      orderBy: { createdAt: "desc" } as const,
+      where: { createdById: ctx.session.user.id },
     });
 
     return post ?? null;

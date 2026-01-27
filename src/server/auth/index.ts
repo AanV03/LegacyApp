@@ -1,10 +1,8 @@
-import NextAuth from "next-auth";
-import { cache } from "react";
+import { NextResponse } from "next/server";
 
-import { authConfig } from "./config";
+const handlers = {
+	GET: async () => NextResponse.json({ error: "NextAuth removed" }, { status: 404 }),
+	POST: async () => NextResponse.json({ error: "NextAuth removed" }, { status: 404 }),
+};
 
-const { auth: uncachedAuth, handlers, signIn, signOut } = NextAuth(authConfig);
-
-const auth = cache(uncachedAuth);
-
-export { auth, handlers, signIn, signOut };
+export { handlers };

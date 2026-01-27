@@ -24,10 +24,14 @@ const handler = (req: NextRequest) =>
     onError:
       env.NODE_ENV === "development"
         ? ({ path, error }) => {
-            console.error(
-              `❌ tRPC failed on ${path ?? "<no-path>"}: ${error.message}`,
-            );
-          }
+                console.error(
+                  `❌ tRPC failed on ${path ?? "<no-path>"}: ${error.message}`,
+                );
+                // additional debug output in dev
+                console.error(error);
+                const errorData = error as unknown as Record<string, unknown>;
+                if (errorData.cause) console.error('cause:', errorData.cause);
+              }
         : undefined,
   });
 

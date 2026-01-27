@@ -11,7 +11,8 @@ import { initTRPC, TRPCError } from "@trpc/server";
 import superjson from "superjson";
 import { ZodError } from "zod";
 
-import { auth } from "~/server/auth";
+import jwt from "jsonwebtoken";
+import { env } from "~/env";
 import { db } from "~/server/db";
 
 /**
@@ -26,13 +27,41 @@ import { db } from "~/server/db";
  *
  * @see https://trpc.io/docs/server/context
  */
-export const createTRPCContext = async (opts: { headers: Headers }) => {
-  const session = await auth();
+export const createTRPCContext = async (opts?: { headers?: Headers }) => {
+  const heads = opts?.headers ?? new Headers();
+
+  // Try to extract token from `Authorization` header or cookie `token`
+  const authHeader = heads.get("authorization") ?? "";
+  let token: string | null = null;
+  if (authHeader.startsWith("Bearer ")) token = authHeader.slice(7);
+  else {
+    const cookie = heads.get("cookie") ?? "";
+    const match = /(?:^|; )token=([^;]+)/.exec(cookie);
+    const raw = match?.[1] ?? undefined;
+    token = typeof raw === "string" ? decodeURIComponent(raw) : null;
+  }
+
+  let session = null;
+  if (token) {
+    try {
+      interface JWTPayload {
+        userId: string;
+        name: string;
+        email: string;
+      }
+      const payload = jwt.verify(token, env.AUTH_SECRET ?? "") as JWTPayload;
+      session = { user: { id: payload.userId, name: payload.name, email: payload.email } };
+    } catch {
+      session = null;
+    }
+  }
+
+  console.log("[auth][session]:", session?.user ? { userId: session.user.id } : session);
 
   return {
     db,
     session,
-    ...opts,
+    headers: heads,
   };
 };
 
