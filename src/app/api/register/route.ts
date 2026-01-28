@@ -31,7 +31,7 @@ export async function POST(req: Request) {
     // Generate username from email (part before @)
     const username = email.split("@")[0];
 
-    await db.user.create({
+    const user = await db.user.create({
       data: {
         username,
         email,
@@ -39,6 +39,33 @@ export async function POST(req: Request) {
         password: hashed,
       },
     });
+
+    // Create notifications for admins about the new user
+    try {
+      const admins = await db.user.findMany({
+        where: {
+          OR: [{ role: "ADMIN" }, { roles: { has: "ADMIN" } }],
+        },
+      });
+
+      const message = `Nuevo usuario registrado: ${user.name ?? user.email}`;
+
+      await Promise.all(
+        admins.map((a) =>
+          db.notification.create({
+            data: {
+              userId: a.id,
+              message,
+              type: "USER_REGISTERED",
+            },
+          })
+        )
+      );
+    } catch (err) {
+      // Non-fatal: log and continue
+      // eslint-disable-next-line no-console
+      console.error("Failed to create admin notifications for new user:", err);
+    }
 
     return NextResponse.json({});
   } catch {

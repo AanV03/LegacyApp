@@ -278,7 +278,9 @@ exports.NotificationType = exports.$Enums.NotificationType = {
   PROJECT_DELETED: 'PROJECT_DELETED',
   TASK_CREATED: 'TASK_CREATED',
   TASK_DELETED: 'TASK_DELETED',
-  TASK_STATUS_CHANGED: 'TASK_STATUS_CHANGED'
+  TASK_STATUS_CHANGED: 'TASK_STATUS_CHANGED',
+  USER_REGISTERED: 'USER_REGISTERED',
+  USER_DELETED: 'USER_DELETED'
 };
 
 exports.SystemEventType = exports.$Enums.SystemEventType = {

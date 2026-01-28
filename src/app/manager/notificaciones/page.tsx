@@ -6,15 +6,26 @@ import { Button } from "~/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "~/components/ui/dialog";
 import { Badge } from "~/components/ui/badge";
 import { toast } from "sonner";
-import { Clipboard, Folder, MessageSquare, Trash } from "lucide-react";
+import { Clipboard, Folder, MessageSquare, Trash, User } from "lucide-react";
 import { api } from "~/trpc/react";
 import type { RouterOutputs } from "~/trpc/react";
 
-type NotificationType = "TASK_ASSIGNED" | "TASK_UPDATED" | "COMMENT_ADDED" | "TASK_COMPLETED" | "PROJECT_CREATED" | "PROJECT_DELETED" | "TASK_CREATED" | "TASK_DELETED" | "TASK_STATUS_CHANGED";
+type NotificationType =
+    | "TASK_ASSIGNED"
+    | "TASK_UPDATED"
+    | "COMMENT_ADDED"
+    | "TASK_COMPLETED"
+    | "PROJECT_CREATED"
+    | "PROJECT_DELETED"
+    | "TASK_CREATED"
+    | "TASK_DELETED"
+    | "TASK_STATUS_CHANGED"
+    | "USER_REGISTERED"
+    | "USER_DELETED";
 
 export default function NotificationTab() {
     const [showUnreadOnly, setShowUnreadOnly] = useState(true);
-    const [selectedFilter, setSelectedFilter] = useState<"all" | "tasks" | "projects" | "comments">("all");
+    const [selectedFilter, setSelectedFilter] = useState<"all" | "tasks" | "projects" | "comments" | "users">("all");
 
     const { data: unreadNotifications = [], refetch: refetchUnread } =
         api.notification.getUnread.useQuery();
@@ -74,6 +85,7 @@ export default function NotificationTab() {
             tasks: ["TASK_ASSIGNED", "TASK_UPDATED", "TASK_COMPLETED", "TASK_CREATED", "TASK_DELETED", "TASK_STATUS_CHANGED"],
             projects: ["PROJECT_CREATED", "PROJECT_DELETED"],
             comments: ["COMMENT_ADDED"],
+            users: ["USER_REGISTERED", "USER_DELETED"],
         };
 
         const allowedTypes = filterMap[selectedFilter] || [];
@@ -94,6 +106,9 @@ export default function NotificationTab() {
             case "PROJECT_CREATED":
             case "PROJECT_DELETED":
                 return <Folder size={18} />;
+            case "USER_REGISTERED":
+            case "USER_DELETED":
+                return <User size={18} />;
             case "COMMENT_ADDED":
                 return <MessageSquare size={18} />;
             default:
@@ -119,6 +134,10 @@ export default function NotificationTab() {
                 return "Proyecto Creado";
             case "PROJECT_DELETED":
                 return "Proyecto Eliminado";
+            case "USER_REGISTERED":
+                return "Usuario Registrado";
+            case "USER_DELETED":
+                return "Usuario Eliminado";
             case "COMMENT_ADDED":
                 return "Comentario Añadido";
             default:
@@ -130,6 +149,7 @@ export default function NotificationTab() {
         if (type.includes("TASK")) return "default";
         if (type.includes("PROJECT")) return "secondary";
         if (type.includes("COMMENT")) return "outline";
+        if (type.includes("USER")) return "secondary";
         return "default";
     };
 

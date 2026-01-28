@@ -53,6 +53,8 @@ enum NotificationType {
     TASK_CREATED
     TASK_DELETED
     TASK_STATUS_CHANGED
+    USER_REGISTERED
+    USER_DELETED
 }
 
 enum SystemEventType {
