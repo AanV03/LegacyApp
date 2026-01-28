@@ -118,7 +118,9 @@ export const notificationRouter = createTRPCRouter({
         });
       }
 
-      if (notification.userId !== ctx.session.user.id) {
+      const isAdmin = ctx.session.user.role === "ADMIN" || ctx.session.user.roles?.includes?.("ADMIN");
+
+      if (notification.userId !== ctx.session.user.id && !isAdmin) {
         throw new TRPCError({
           code: "FORBIDDEN",
           message: "You can only delete your own notifications",

@@ -3,9 +3,10 @@
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { Button } from "~/components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "~/components/ui/dialog";
 import { Badge } from "~/components/ui/badge";
 import { toast } from "sonner";
-import { Clipboard, Folder, MessageSquare } from "lucide-react";
+import { Clipboard, Folder, MessageSquare, Trash } from "lucide-react";
 import { api } from "~/trpc/react";
 import type { RouterOutputs } from "~/trpc/react";
 
@@ -19,6 +20,8 @@ export default function NotificationTab() {
         api.notification.getUnread.useQuery();
     const { data: allNotifications = [], refetch: refetchAll } =
         api.notification.getAll.useQuery({ limit: 50 });
+    const { data: me } = api.user.me.useQuery();
+    const isAdmin = !!(me?.role === "ADMIN" || me?.roles?.includes?.("ADMIN"));
     const { data: unreadCountData } = api.notification.getUnreadCount.useQuery();
     const unreadCount = unreadCountData?.unreadCount ?? 0;
 
@@ -30,6 +33,30 @@ export default function NotificationTab() {
         },
         onError: (error) => toast.error(error.message ?? "Error al marcar"),
     });
+
+    const deleteNotificationMutation = api.notification.delete.useMutation({
+        onSuccess: () => {
+            void refetchUnread();
+            void refetchAll();
+            toast.success("Notificación eliminada");
+        },
+        onError: (error) => toast.error(error.message ?? "Error al eliminar"),
+    });
+
+    const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
+    const [selectedNotifId, setSelectedNotifId] = useState<number | null>(null);
+
+    const handleOpenConfirm = (id: number) => {
+        setSelectedNotifId(id);
+        setConfirmDeleteOpen(true);
+    };
+
+    const handleConfirmDelete = async () => {
+        if (!selectedNotifId) return;
+        await deleteNotificationMutation.mutateAsync({ id: selectedNotifId });
+        setConfirmDeleteOpen(false);
+        setSelectedNotifId(null);
+    };
 
     const handleMarkAllAsRead = async () => {
         await markAllAsReadMutation.mutateAsync();
@@ -195,7 +222,20 @@ export default function NotificationTab() {
                                                     <Badge variant={getBadgeVariant(n.type as NotificationType)} className="text-xs">
                                                         {getNotificationLabel(n.type as NotificationType)}
                                                     </Badge>
-                                                    {!n.read && <span className="w-2 h-2 bg-blue-500 rounded-full" />}
+                                                                    {!n.read && <span className="w-2 h-2 bg-blue-500 rounded-full" />}
+                                                                    {isAdmin && (
+                                                                        <>
+                                                                            <Button
+                                                                                variant="ghost"
+                                                                                size="sm"
+                                                                                onClick={() => handleOpenConfirm(n.id)}
+                                                                                className="ml-2"
+                                                                                disabled={deleteNotificationMutation.isPending}
+                                                                            >
+                                                                                <Trash size={14} />
+                                                                            </Button>
+                                                                        </>
+                                                                    )}
                                                 </div>
                                                 <p className="text-sm mt-1 text-foreground wrap-break-word">{n.message}</p>
                                                 <p className="text-xs text-muted-foreground mt-1">
@@ -220,6 +260,30 @@ export default function NotificationTab() {
                     </div>
                 </CardContent>
             </Card>
+            <Dialog open={confirmDeleteOpen} onOpenChange={setConfirmDeleteOpen}>
+                <DialogContent className="max-w-sm">
+                    <DialogHeader>
+                        <DialogTitle>Confirmar eliminación</DialogTitle>
+                    </DialogHeader>
+                    <p className="text-gray-600">¿Estás seguro que deseas eliminar esta notificación? Esta acción no se puede deshacer.</p>
+                    <div className="flex gap-2 justify-end pt-4">
+                        <Button
+                            variant="outline"
+                            onClick={() => setConfirmDeleteOpen(false)}
+                            disabled={deleteNotificationMutation.isPending}
+                        >
+                            Cancelar
+                        </Button>
+                        <Button
+                            variant="destructive"
+                            onClick={() => void handleConfirmDelete()}
+                            disabled={deleteNotificationMutation.isPending}
+                        >
+                            Eliminar
+                        </Button>
+                    </div>
+                </DialogContent>
+            </Dialog>
         </div>
     );
 }
