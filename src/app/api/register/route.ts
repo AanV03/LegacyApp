@@ -44,7 +44,7 @@ export async function POST(req: Request) {
     try {
       const admins = await db.user.findMany({
         where: {
-          OR: [{ role: "ADMIN" }, { roles: { has: "ADMIN" } }],
+          role: "ADMIN",
         },
       });
 
