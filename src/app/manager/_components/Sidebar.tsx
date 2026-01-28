@@ -56,7 +56,7 @@ export function SidebarNav({ activeTab, onTabChange }: SidebarNavProps) {
       {/* Header */}
       <SidebarHeader className="border-b px-4 h-16 flex items-center justify-center">
         <div className="flex items-center gap-2">
-          <Image src="/logo.png" alt="Manager Logo" width={32} height={32} />
+          <Image src="images/Logo.png" alt="Manager Logo" width={32} height={32} />
           <h1 className="text-lg font-bold text-foreground">Manager</h1>
         </div>
       </SidebarHeader>
