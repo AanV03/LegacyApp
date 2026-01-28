@@ -47,14 +47,18 @@ export default function LoginForm({ onSuccess }: LoginFormProps) {
       body: JSON.stringify({ identifier: email, password }),
     });
 
-    await response.json();
+    const data = (await response.json()) as { ok?: boolean; token?: string; role?: string };
     if (!response.ok) {
       toast.error("Credenciales inválidas, verifica tu correo y contraseña");
       return;
     }
 
-    // Guardar información del usuario en localStorage
-    localStorage.setItem("user", JSON.stringify({ email, name: email.split("@")[0] }));
+    // Guardar información del usuario en localStorage (incluir role si el backend lo devolvió)
+    const storedUser: Record<string, any> = { email, name: email.split("@")[0] };
+    if (data?.role) storedUser.role = data.role;
+    try {
+      localStorage.setItem("user", JSON.stringify(storedUser));
+    } catch {}
 
     toast.success("¡Sesión iniciada!");
     onSuccess?.();

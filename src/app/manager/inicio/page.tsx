@@ -153,8 +153,8 @@ export default function DashboardHome() {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
                 <Card className="lg:col-span-1 p-4">
                     <h3 className="text-lg font-semibold">Distribución por Estado</h3>
-                    <div className="mt-3 w-full h-55">
-                        <ResponsiveContainer>
+                    <div className="mt-3 w-full h-56 min-h-[220px]">
+                        <ResponsiveContainer width="100%" height={220}>
                             <PieChart>
                                 <Pie data={statusDistribution} dataKey="value" nameKey="displayName" innerRadius={40} outerRadius={80} label>
                                     {statusDistribution.map((entry, idx) => (
@@ -170,8 +170,8 @@ export default function DashboardHome() {
 
                 <Card className="lg:col-span-2 p-4">
                     <h3 className="text-lg font-semibold">Tareas por Proyecto</h3>
-                    <div className="mt-3 w-full h-60">
-                        <ResponsiveContainer>
+                    <div className="mt-3 w-full h-60 min-h-[240px]">
+                        <ResponsiveContainer width="100%" height={240}>
                             <BarChart data={tasksPerProject}>
                                 <CartesianGrid strokeDasharray="3 3" />
                                 <XAxis dataKey="project" type="category" />

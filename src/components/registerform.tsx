@@ -131,8 +131,15 @@ export default function RegisterForm({ onSuccess }: RegisterFormProps) {
           return;
         }
 
-        // Store basic user info and redirect to manager
-        localStorage.setItem("user", JSON.stringify({ email: trimmedEmail, name: name.trim() }));
+        const loginData = (await loginRes.json()) as { ok?: boolean; token?: string; role?: string };
+
+        // Store basic user info and role (if provided)
+        const storedUser: Record<string, any> = { email: trimmedEmail, name: name.trim() };
+        if (loginData?.role) storedUser.role = loginData.role;
+        try {
+          localStorage.setItem("user", JSON.stringify(storedUser));
+        } catch {}
+
         toast.success("Usuario creado y sesión iniciada");
         setLoading(false);
         router.push("/manager");

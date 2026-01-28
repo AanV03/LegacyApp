@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import Image from "next/image";
 import {
   LayoutDashboard,
@@ -8,6 +9,7 @@ import {
   MessageSquare,
   History,
   FileText,
+  Users,
 } from "lucide-react";
 import {
   Sidebar,
@@ -19,6 +21,7 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "~/components/ui/sidebar";
+import { api } from "~/trpc/react";
 import { useIsMobile } from "~/hooks/use-mobile";
 
 interface SidebarNavProps {
@@ -38,6 +41,11 @@ const menuItems = [
 export function SidebarNav({ activeTab, onTabChange }: SidebarNavProps) {
   const { setOpenMobile } = useSidebar();
   const isMobile = useIsMobile();
+  const { data: me, isLoading: meLoading } = api.user.me.useQuery(undefined, {
+    retry: false,
+  });
+
+  const isAdmin = !!(me?.role === "ADMIN" || me?.roles?.includes?.("ADMIN"));
 
   const gradientClass = !isMobile
     ? "**:data-[sidebar='sidebar']:bg-linear-to-b **:data-[sidebar='sidebar']:from-purple-400/40 **:data-[sidebar='sidebar']:via-purple-300/25 **:data-[sidebar='sidebar']:to-blue-400/40"
@@ -76,6 +84,22 @@ export function SidebarNav({ activeTab, onTabChange }: SidebarNavProps) {
               </SidebarMenuItem>
             );
           })}
+
+          {isAdmin && (
+            <SidebarMenuItem key="teams">
+              <SidebarMenuButton
+                onClick={() => {
+                  onTabChange("teams");
+                  setOpenMobile(false);
+                }}
+                isActive={activeTab === "teams"}
+                className="cursor-pointer px-4 py-2.5"
+              >
+                <Users className="w-4 h-4" />
+                <span>Equipos</span>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          )}
         </SidebarMenu>
       </SidebarContent>
 

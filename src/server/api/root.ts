@@ -6,6 +6,7 @@ import { projectRouter } from "~/server/api/routers/project";
 import { reportRouter } from "~/server/api/routers/report";
 import { searchRouter } from "~/server/api/routers/search";
 import { taskRouter } from "~/server/api/routers/task";
+import { userRouter } from "~/server/api/routers/user";
 import { createCallerFactory, createTRPCRouter } from "~/server/api/trpc";
 
 /**
@@ -22,6 +23,7 @@ export const appRouter = createTRPCRouter({
   report: reportRouter,
   search: searchRouter,
   task: taskRouter,
+  user: userRouter,
 });
 
 // export type definition of API

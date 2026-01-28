@@ -10,6 +10,7 @@ const tabToPath: Record<string, string> = {
     dashboard: "inicio",
     tasks: "tareas",
     projects: "proyectos",
+    teams: "equipos",
     comments: "comentarios",
     history: "historial",
     reports: "reportes",
@@ -20,6 +21,7 @@ const pathToTab = (p: string) => {
     if (p.startsWith("/manager/inicio")) return "dashboard";
     if (p.startsWith("/manager/tareas")) return "tasks";
     if (p.startsWith("/manager/proyectos")) return "projects";
+    if (p.startsWith("/manager/equipos")) return "teams";
     if (p.startsWith("/manager/comentarios")) return "comments";
     if (p.startsWith("/manager/historial")) return "history";
     if (p.startsWith("/manager/reportes")) return "reports";

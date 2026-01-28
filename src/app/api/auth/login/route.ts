@@ -26,7 +26,7 @@ export async function POST(req: Request) {
     const valid = await bcrypt.compare(password, user.password);
     if (!valid) return NextResponse.json({ error: "Invalid credentials" }, { status: 401 });
 
-    const payload = { userId: user.id, name: user.name, email: user.email };
+    const payload = { userId: user.id, name: user.name, email: user.email, role: user.role };
     const token = jwt.sign(payload, env.AUTH_SECRET ?? "", { expiresIn: "7d" });
 
     const maxAge = 60 * 60 * 24 * 7; // 7 days
@@ -35,7 +35,7 @@ export async function POST(req: Request) {
       secure ? "; Secure" : ""
     }`;
 
-    return NextResponse.json({ ok: true, token }, { status: 200, headers: { "Set-Cookie": cookie } });
+    return NextResponse.json({ ok: true, token, role: user.role }, { status: 200, headers: { "Set-Cookie": cookie } });
   } catch {
     return NextResponse.json({ error: "Server error" }, { status: 500 });
   }

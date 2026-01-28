@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Search, MoreVertical, User, LogOut, Menu, Bell } from "lucide-react";
+import { Search, MoreVertical, User, LogOut, Menu, Bell, Clipboard, Folder, MessageSquare } from "lucide-react";
 import { toast } from "sonner";
 import { api } from "~/trpc/react";
 import {
@@ -38,6 +38,38 @@ export function Topbar({ userName: initialUserName = "Usuario", onNotificationCl
   const unreadCount = unreadCountData?.unreadCount ?? 0;
   
   const recentNotifications = (unreadNotifications ?? []).slice(0, 3);
+
+  const getNotificationLabel = (type: string) => {
+    switch (type) {
+      case "TASK_CREATED":
+        return "Tarea creada";
+      case "TASK_ASSIGNED":
+        return "Tarea asignada";
+      case "TASK_UPDATED":
+        return "Tarea actualizada";
+      case "TASK_COMPLETED":
+        return "Tarea completada";
+      case "TASK_STATUS_CHANGED":
+        return "Estado de tarea";
+      case "TASK_DELETED":
+        return "Tarea eliminada";
+      case "PROJECT_CREATED":
+        return "Proyecto creado";
+      case "PROJECT_DELETED":
+        return "Proyecto eliminado";
+      case "COMMENT_ADDED":
+        return "Comentario añadido";
+      default:
+        return type.replace(/_/g, " ");
+    }
+  };
+
+  const getIconComponent = (type: string) => {
+    if (type.includes("TASK")) return <Clipboard size={18} />;
+    if (type.includes("PROJECT")) return <Folder size={18} />;
+    if (type.includes("COMMENT")) return <MessageSquare size={18} />;
+    return <Bell size={18} />;
+  };
 
   useEffect(() => {
     // Obtener nombre del usuario desde localStorage o sessionStorage
@@ -130,23 +162,36 @@ export function Topbar({ userName: initialUserName = "Usuario", onNotificationCl
               >
                 <Bell size={18} />
                 {unreadCount > 0 && (
-                  <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full" />
+                  <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full animate-pulse" />
                 )}
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-80 bg-purple-400/15 max-h-96 overflow-y-auto" sideOffset={12}>
+            <DropdownMenuContent align="end" className="w-96 bg-white/95 backdrop-blur max-h-96 overflow-y-auto shadow-lg rounded-lg border border-border" sideOffset={12}>
               {recentNotifications.length > 0 ? (
                 <>
-                  <div className="px-2 py-2 space-y-1">
-                    {recentNotifications.map((notif, idx) => (
-                      <div key={idx} className="px-3 py-2 text-sm rounded hover:bg-purple-300/20 cursor-default">
-                        <div className="font-medium text-foreground">[{notif.type}]</div>
-                        <div className="text-xs text-muted-foreground mt-1">{notif.message}</div>
-                        <div className="text-xs text-muted-foreground mt-1">
-                          {notif.createdAt ? new Date(notif.createdAt).toLocaleString() : ""}
+                  <div className="p-4 space-y-3 border-b">
+                    <div className="text-sm font-semibold text-foreground">Notificaciones Recientes</div>
+                    {recentNotifications.map((notif, idx) => {
+                      return (
+                        <div key={idx} className="px-3 py-2 text-sm rounded-lg bg-muted/40 hover:bg-muted/60 transition-colors cursor-default border border-border/50">
+                          <div className="flex items-start gap-2">
+                            <span className="text-lg shrink-0">{getIconComponent(notif.type)}</span>
+                            <div className="flex-1 min-w-0">
+                              <div className="font-medium text-foreground text-xs mb-1">{getNotificationLabel(notif.type)}</div>
+                              <div className="text-xs text-muted-foreground wrap-break-word">{notif.message}</div>
+                              <div className="text-xs text-muted-foreground mt-1">
+                                {notif.createdAt ? new Date(notif.createdAt).toLocaleString("es-ES", { 
+                                  hour: "2-digit", 
+                                  minute: "2-digit",
+                                  day: "2-digit",
+                                  month: "2-digit"
+                                }) : ""}
+                              </div>
+                            </div>
+                          </div>
                         </div>
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem
@@ -154,7 +199,7 @@ export function Topbar({ userName: initialUserName = "Usuario", onNotificationCl
                       setShowNotifications(false);
                       onNotificationClick?.();
                     }}
-                    className="cursor-pointer justify-center py-2 text-sm"
+                    className="cursor-pointer justify-center py-3 text-sm font-medium text-blue-600 hover:text-blue-700 hover:bg-blue-50"
                   >
                     Ver todas ({unreadCount})
                   </DropdownMenuItem>

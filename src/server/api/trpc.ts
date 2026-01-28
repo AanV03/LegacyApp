@@ -48,9 +48,19 @@ export const createTRPCContext = async (opts?: { headers?: Headers }) => {
         userId: string;
         name: string;
         email: string;
+        role?: string;
+        roles?: string[];
       }
       const payload = jwt.verify(token, env.AUTH_SECRET ?? "") as JWTPayload;
-      session = { user: { id: payload.userId, name: payload.name, email: payload.email } };
+      session = {
+        user: {
+          id: payload.userId,
+          name: payload.name,
+          email: payload.email,
+          role: payload.role ?? undefined,
+          roles: payload.roles ?? undefined,
+        },
+      };
     } catch {
       session = null;
     }

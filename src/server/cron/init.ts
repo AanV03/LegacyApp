@@ -22,6 +22,8 @@ export function initializeCronJobs() {
   });
 
   console.log("[Cron] Event processor scheduled to run every minute");
+  // Run once immediately so new events are processed without waiting up to 1 minute
+  void processSystemEvents();
 }
 
 /**

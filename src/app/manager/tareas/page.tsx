@@ -243,6 +243,7 @@ export default function TaskTab() {
     });
     const [editingId, setEditingId] = useState<number | null>(null);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const [isConfirmDeleteOpen, setIsConfirmDeleteOpen] = useState(false);
 
     // Filtros de búsqueda
     const [searchFilters, setSearchFilters] = useState({
@@ -421,9 +422,13 @@ export default function TaskTab() {
             return;
         }
 
-        if (window.confirm("Are you sure you want to delete this task?")) {
-            await deleteMutation.mutateAsync({ id: editingId });
-        }
+        setIsConfirmDeleteOpen(true);
+    };
+
+    const handleConfirmDelete = async () => {
+        if (!editingId) return;
+        await deleteMutation.mutateAsync({ id: editingId });
+        setIsConfirmDeleteOpen(false);
     };
 
     const handleSelectTask = (task: TaskItem) => {
@@ -1058,6 +1063,30 @@ export default function TaskTab() {
                                 <span className="hidden sm:inline">Eliminar</span>
                             </Button>
                         </div>
+                    </div>
+                </DialogContent>
+            </Dialog>
+            <Dialog open={isConfirmDeleteOpen} onOpenChange={setIsConfirmDeleteOpen}>
+                <DialogContent className="max-w-sm">
+                    <DialogHeader>
+                        <DialogTitle>Confirmar eliminación</DialogTitle>
+                    </DialogHeader>
+                    <p className="text-gray-600">¿Estás seguro que deseas eliminar esta tarea? Esta acción no se puede deshacer.</p>
+                    <div className="flex gap-2 justify-end pt-4">
+                        <Button 
+                            variant="outline"
+                            onClick={() => setIsConfirmDeleteOpen(false)}
+                            disabled={deleteMutation.isPending}
+                        >
+                            Cancelar
+                        </Button>
+                        <Button 
+                            variant="destructive"
+                            onClick={() => void handleConfirmDelete()}
+                            disabled={deleteMutation.isPending}
+                        >
+                            Eliminar
+                        </Button>
                     </div>
                 </DialogContent>
             </Dialog>
