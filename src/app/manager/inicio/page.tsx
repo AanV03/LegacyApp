@@ -18,10 +18,10 @@ import {
 } from "recharts";
 
 const STATUS_COLORS: Record<string, string> = {
-    PENDING: "#f59e0b",
-    IN_PROGRESS: "#3b82f6",
-    COMPLETED: "#10b981",
-    CANCELLED: "#ef4444",
+    PENDING: "var(--status-pending)",
+    IN_PROGRESS: "var(--status-in-progress)",
+    COMPLETED: "var(--status-completed)",
+    CANCELLED: "var(--status-cancelled)",
 };
 
 const STATUS_LABELS: Record<string, string> = {
@@ -177,7 +177,7 @@ export default function DashboardHome() {
                                 <XAxis dataKey="project" type="category" />
                                 <YAxis type="number" />
                                 <Tooltip />
-                                <Bar dataKey="value" fill="#2563eb" />
+                                <Bar dataKey="value" fill="var(--chart-2)" />
                             </BarChart>
                         </ResponsiveContainer>
                     </div>

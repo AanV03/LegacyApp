@@ -103,6 +103,29 @@
   --foreground: oklch(0.145 0 0);
   --success: #10b981;
   --error: #ef4444;
+
+  /* Status/Chart colors (invariant across light/dark) */
+  --status-pending: #f59e0b;
+  --status-in-progress: #3b82f6;
+  --status-completed: #10b981;
+  --status-cancelled: #ef4444;
+  --notification-badge: #ef4444;
+
+  /* Glassmorphism (light mode) */
+  --glass-bg: rgba(255, 255, 255, 0.15);
+  --glass-bg-hover: rgba(255, 255, 255, 0.18);
+  --glass-bg-lighter: rgba(255, 255, 255, 0.12);
+  --glass-bg-lighter-thin: rgba(255, 255, 255, 0.1);
+  --glass-border: rgba(255, 255, 255, 0.25);
+  --glass-border-hover: rgba(255, 255, 255, 0.35);
+  --glass-text: rgba(255, 255, 255, 0.95);
+  --glass-text-secondary: rgba(255, 255, 255, 0.6);
+  --glass-text-placeholder: rgba(255, 255, 255, 0.45);
+  --glass-focus-shadow: rgba(37, 99, 235, 0.25);
+
+  /* Form validation (light mode specific) */
+  --form-error-dark: #b00020;
+  --form-success-dark: #006e2e;
 }
 
 .dark {
@@ -157,6 +180,29 @@
   --title-blue: #2563EB;
   --success: #10b981;
   --error: #ef4444;
+
+  /* Status/Chart colors (invariant across light/dark) */
+  --status-pending: #f59e0b;
+  --status-in-progress: #3b82f6;
+  --status-completed: #10b981;
+  --status-cancelled: #ef4444;
+  --notification-badge: #ef4444;
+
+  /* Glassmorphism (dark mode) */
+  --glass-bg: rgba(255, 255, 255, 0.1);
+  --glass-bg-hover: rgba(255, 255, 255, 0.15);
+  --glass-bg-lighter: rgba(255, 255, 255, 0.08);
+  --glass-bg-lighter-thin: rgba(255, 255, 255, 0.06);
+  --glass-border: rgba(255, 255, 255, 0.15);
+  --glass-border-hover: rgba(255, 255, 255, 0.25);
+  --glass-text: rgba(255, 255, 255, 0.95);
+  --glass-text-secondary: rgba(255, 255, 255, 0.7);
+  --glass-text-placeholder: rgba(255, 255, 255, 0.5);
+  --glass-focus-shadow: rgba(96, 165, 250, 0.3);
+
+  /* Form validation (dark mode inherits same values as light) */
+  --form-error-dark: #b00020;
+  --form-success-dark: #006e2e;
 }
 
 @layer base {
@@ -234,10 +280,10 @@
 /* Card container - glasmorphism effect */
 .login-card {
   @apply rounded-3xl shadow-2xl;
-  background: rgba(255, 255, 255, 0.15);
+  background: var(--glass-bg);
   -webkit-backdrop-filter: blur(30px);
   backdrop-filter: blur(30px);
-  border: 1px solid rgba(255, 255, 255, 0.18);
+  border: 1px solid var(--glass-border);
   width: 85%;
   box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.25);
   padding: 1.5rem;
@@ -264,39 +310,39 @@
 /* Glasmorphism input fields */
 .glass-input {
   @apply w-full px-4 py-3 rounded-lg border transition-all duration-300;
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--glass-bg-lighter-thin);
   -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
-  border-color: rgba(255, 255, 255, 0.25);
-  color: rgba(255, 255, 255, 0.95);
+  border-color: var(--glass-border);
+  color: var(--glass-text);
   font-weight: 500;
 }
 
 .glass-input::placeholder {
-  color: rgba(255, 255, 255, 0.45);
+  color: var(--glass-text-placeholder);
 }
 
 .glass-input:focus {
-  background: rgba(255, 255, 255, 0.15);
-  border-color: rgba(255, 255, 255, 0.35);
+  background: var(--glass-bg);
+  border-color: var(--glass-border-hover);
   outline: none;
-  box-shadow: 0 0 25px rgba(37, 99, 235, 0.25);
+  box-shadow: 0 0 25px var(--glass-focus-shadow);
 }
 
 /* Glasmorphism button */
 .glass-button {
   @apply px-8 py-2.5 rounded-lg font-semibold transition-all duration-300 border;
-  background: rgba(255, 255, 255, 0.12);
+  background: var(--glass-bg-lighter);
   -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
-  border-color: rgba(255, 255, 255, 0.25);
-  color: rgba(255, 255, 255, 0.95);
+  border-color: var(--glass-border);
+  color: var(--glass-text);
   box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.2);
 }
 
 .glass-button:hover {
-  background: rgba(255, 255, 255, 0.18);
-  border-color: rgba(255, 255, 255, 0.35);
+  background: var(--glass-bg-hover);
+  border-color: var(--glass-border-hover);
   box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.35);
   transform: translateY(-2px);
 }
@@ -309,14 +355,14 @@
 /* Glass card header */
 .glass-card-header {
   @apply pb-4 border-b;
-  border-color: rgba(255, 255, 255, 0.15);
+  border-color: var(--glass-border);
   margin: 0;
   padding: 0 0 1rem 0;
 }
 
 .glass-card-header h3 {
   @apply text-2xl font-bold;
-  color: rgba(255, 255, 255, 0.95);
+  color: var(--glass-text);
   text-align: center;
 }
 
@@ -368,12 +414,12 @@
 /* Glass card header */
 .glass-card-header {
   @apply pb-4 border-b;
-  border-color: rgba(255, 255, 255, 0.15);
+  border-color: var(--glass-border);
 }
 
 .glass-card-header h3 {
   @apply text-xl font-semibold;
-  color: rgba(255, 255, 255, 0.95);
+  color: var(--glass-text);
 }
 
 /* Register form styles */
@@ -404,12 +450,12 @@
 }
 
 .register-error {
-  color: #b00020;
+  color: var(--form-error-dark);
   margin-top: 12px;
 }
 
 .register-success {
-  color: #006e2e;
+  color: var(--form-success-dark);
   margin-top: 12px;
 }
 
@@ -423,8 +469,8 @@
 
 .auth-tabs-list {
   @apply inline-flex w-full gap-0 p-0 bg-transparent border-b rounded-none;
-  border-color: rgba(255, 255, 255, 0.15);
-  border-bottom: 2px solid rgba(255, 255, 255, 0.15);
+  border-color: var(--glass-border);
+  border-bottom: 2px solid var(--glass-border);
   margin-bottom: 1.5rem;
   flex-shrink: 0;
 }
@@ -433,19 +479,19 @@
   @apply flex-1 py-3 px-4 text-sm font-medium transition-all duration-300 rounded-none;
   background: transparent;
   border: none;
-  color: rgba(255, 255, 255, 0.6);
+  color: var(--glass-text-secondary);
   position: relative;
   border-bottom: 2px solid transparent;
   margin-bottom: -2px;
 }
 
 .auth-tab-trigger:hover {
-  color: rgba(255, 255, 255, 0.8);
+  color: var(--glass-text);
   background: rgba(255, 255, 255, 0.05);
 }
 
 .auth-tab-trigger[data-state="active"] {
-  color: rgba(255, 255, 255, 0.95);
+  color: var(--glass-text);
   border-bottom: 2px solid rgba(37, 99, 235, 0.8);
   background: transparent;
   box-shadow: 0 2px 8px rgba(37, 99, 235, 0.15);

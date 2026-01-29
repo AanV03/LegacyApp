@@ -14,6 +14,25 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
     return (
         <html lang="en">
+            <head>
+                {/* Pre-hydration theme script to prevent FOUC */}
+                <script
+                    dangerouslySetInnerHTML={{
+                        __html: `
+                            (function() {
+                                const theme = localStorage.getItem('theme');
+                                const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                                const isDark = theme === 'dark' || (!theme && prefersDark);
+                                if (isDark) {
+                                    document.documentElement.classList.add('dark');
+                                } else {
+                                    document.documentElement.classList.remove('dark');
+                                }
+                            })();
+                        `,
+                    }}
+                />
+            </head>
             <body>
                 <TRPCReactProvider>{children}</TRPCReactProvider>
                 <Toaster position="bottom-right" />

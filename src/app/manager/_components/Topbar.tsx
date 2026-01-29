@@ -15,6 +15,7 @@ import {
 import { Input } from "~/components/ui/input";
 import { Button } from "~/components/ui/button";
 import { useSidebar } from "~/components/ui/sidebar";
+import { ThemeToggle } from "~/components/ThemeToggle";
 
 interface TopbarProps {
   userName?: string;
@@ -150,7 +151,7 @@ export function Topbar({ userName: initialUserName = "Usuario", onNotificationCl
               placeholder="Buscar..."
               value={searchQuery}
               onChange={handleSearchChange}
-              className="pl-10 w-full bg-gray-50 border-gray-200 focus:bg-white"
+              className="pl-10 w-full bg-card border-input focus:bg-card"
             />
           </div>
         </form>
@@ -167,11 +168,11 @@ export function Topbar({ userName: initialUserName = "Usuario", onNotificationCl
               >
                 <Bell size={18} />
                 {unreadCount > 0 && (
-                  <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full animate-pulse" />
+                  <span className="absolute top-1 right-1 w-2 h-2 bg-[color:var(--notification-badge)] rounded-full animate-pulse" />
                 )}
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-96 bg-white/95 backdrop-blur max-h-96 overflow-y-auto shadow-lg rounded-lg border border-border" sideOffset={12}>
+            <DropdownMenuContent align="end" className="w-96 bg-card/95 backdrop-blur max-h-96 overflow-y-auto shadow-lg rounded-lg border border-border" sideOffset={12}>
               {recentNotifications.length > 0 ? (
                 <>
                   <div className="p-4 space-y-3 border-b">
@@ -204,7 +205,7 @@ export function Topbar({ userName: initialUserName = "Usuario", onNotificationCl
                       setShowNotifications(false);
                       onNotificationClick?.();
                     }}
-                    className="cursor-pointer justify-center py-3 text-sm font-medium text-blue-600 hover:text-blue-700 hover:bg-blue-50"
+                    className="cursor-pointer justify-center py-3 text-sm font-medium text-primary hover:text-blue-700 hover:bg-primary/10"
                   >
                     Ver todas ({unreadCount})
                   </DropdownMenuItem>
@@ -221,6 +222,9 @@ export function Topbar({ userName: initialUserName = "Usuario", onNotificationCl
           <span className="text-xs md:text-sm font-medium text-foreground truncate max-w-30 md:max-w-none">
             {userName}
           </span>
+
+          {/* Theme Toggle */}
+          <ThemeToggle />
 
           {/* Dropdown Menu */}
           <DropdownMenu>
