@@ -774,8 +774,8 @@ export default function TaskTab() {
                                                         handleSelectTask(task);
                                                         setIsDialogOpen(true);
                                                     }}
-                                                    className={`cursor-pointer hover:bg-gray-100 ${
-                                                        editingId === task.id ? "bg-blue-50" : ""
+                                                    className={`cursor-pointer hover:bg-muted ${
+                                                        editingId === task.id ? "bg-muted/50" : ""
                                                     }`}
                                                 >
                                                     <TableCell>{task.id}</TableCell>

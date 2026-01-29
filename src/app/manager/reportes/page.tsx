@@ -368,7 +368,7 @@ export default function ReportTab() {
                                                         const dueDateStr = task.dueDate ? new Date(task.dueDate as string | number | Date).toLocaleDateString("es-ES") : "—";
 
                                                         return (
-                                                            <TableRow key={taskId} className="hover:bg-gray-50">
+                                                            <TableRow key={taskId} className="hover:bg-muted">
                                                                     <TableCell>{taskId}</TableCell>
                                                                     <TableCell>{projectNameVal}</TableCell>
                                                                     <TableCell className="font-medium">{taskTitle}</TableCell>
@@ -467,7 +467,7 @@ export default function ReportTab() {
                                                         const dueDateStr = task.dueDate ? new Date(task.dueDate as string | number | Date).toLocaleDateString("es-ES") : "—";
 
                                                         return (
-                                                            <TableRow key={taskId} className="hover:bg-gray-50">
+                                                            <TableRow key={taskId} className="hover:bg-muted">
                                                                 <TableCell>{taskId}</TableCell>
                                                                 <TableCell>{projectNameVal}</TableCell>
                                                                 <TableCell className="font-medium">{taskTitle}</TableCell>
@@ -653,7 +653,7 @@ export default function ReportTab() {
                                                                 const dueDateStr = task.dueDate ? new Date(task.dueDate as string | number | Date).toLocaleDateString("es-ES") : "—";
 
                                                                 return (
-                                                                    <TableRow key={taskId} className="hover:bg-gray-50">
+                                                                    <TableRow key={taskId} className="hover:bg-muted">
                                                                         <TableCell>{taskId}</TableCell>
                                                                         <TableCell className="font-medium">{taskTitle}</TableCell>
                                                                         <TableCell>{(STATUS_LABELS[taskStatus] ?? taskStatus) || "—"}</TableCell>
@@ -843,7 +843,7 @@ export default function ReportTab() {
                                                                 const dueDateStr = task.dueDate ? new Date(task.dueDate as string | number | Date).toLocaleDateString("es-ES") : "—";
 
                                                                 return (
-                                                                    <TableRow key={taskId} className="hover:bg-gray-50">
+                                                                    <TableRow key={taskId} className="hover:bg-muted">
                                                                         <TableCell>{taskId}</TableCell>
                                                                         <TableCell>{projectNameVal}</TableCell>
                                                                         <TableCell className="font-medium">{taskTitle}</TableCell>

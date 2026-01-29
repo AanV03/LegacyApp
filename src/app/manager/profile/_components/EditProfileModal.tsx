@@ -97,7 +97,7 @@ export default function EditProfileModal({ user, onSave }: Props) {
 
             {open && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-                    <div className="bg-white rounded-lg p-6 w-full max-w-2xl">
+                    <div className="bg-card rounded-lg p-6 w-full max-w-2xl">
                         <h3 className="text-lg font-semibold mb-4">Editar perfil (opcional)</h3>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">

@@ -53,7 +53,7 @@ export default function ManagerLayout({ children }: { children: React.ReactNode 
                 <div className="flex-1 flex flex-col">
                     <Topbar userName="Usuario" onNotificationClick={() => router.push("/manager/notificaciones")} />
 
-                    <main className="flex-1 overflow-y-auto bg-gray-50">
+                    <main className="flex-1 overflow-y-auto bg-background">
                         <div className="p-6 md:p-8">
                             <div className="mx-auto max-w-7xl">{children}</div>
                         </div>

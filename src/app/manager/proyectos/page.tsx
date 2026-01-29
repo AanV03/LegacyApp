@@ -210,7 +210,7 @@ export default function ProjectTab() {
                                                         handleSelectProject(project);
                                                         setIsDialogOpen(true);
                                                     }}
-                                                    className={`cursor-pointer hover:bg-gray-100 ${editingId === project.id ? 'bg-blue-50' : ''}`}
+                                                    className={`cursor-pointer hover:bg-muted ${editingId === project.id ? 'bg-muted/50' : ''}`}
                                                 >
                                                     <TableCell>{project.id}</TableCell>
                                                     <TableCell className="font-medium">{project.name}</TableCell>

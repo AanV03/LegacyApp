@@ -52,7 +52,7 @@ export default function ProfilePage() {
 
                 <div className="grid gap-4 sm:gap-6 lg:grid-cols-3">
                     <div className="lg:col-span-2">
-                        <div className="bg-white rounded-lg border p-4 sm:p-6">
+                        <div className="bg-card rounded-lg border p-4 sm:p-6">
                             <h3 className="flex items-center gap-2 text-base sm:text-lg font-semibold mb-4">Información Personal</h3>
 
                             <div className="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2">

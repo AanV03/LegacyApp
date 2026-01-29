@@ -16,7 +16,7 @@ export default function MyTasksCard({ _userEmail }: { _userEmail?: string }) {
     const isLoading = query.isLoading;
 
     return (
-        <div className="p-4 bg-white rounded-lg border shadow-sm">
+        <div className="p-4 bg-card rounded-lg border shadow-sm">
             <div className="mb-2">
                 <h4 className="font-semibold">Mis tareas</h4>
             </div>
