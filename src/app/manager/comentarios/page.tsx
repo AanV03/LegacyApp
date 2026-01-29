@@ -72,6 +72,10 @@ export default function CommentTab() {
 
     return (
         <div className="space-y-6">
+            <div>
+                <h2 className="text-2xl font-bold text-foreground mb-1">Comentarios</h2>
+                <p className="text-muted-foreground">Añade y revisa comentarios de tareas</p>
+            </div>
             <Card>
                 <CardHeader>
                 </CardHeader>

@@ -77,6 +77,10 @@ export default function HistoryTab() {
 
     return (
         <div className="space-y-6">
+            <div>
+                <h2 className="text-2xl font-bold text-foreground mb-1">Historial</h2>
+                <p className="text-muted-foreground">Revisa cambios y actividad del sistema</p>
+            </div>
             {/* Card para Select */}
             <Card>
                 <CardHeader>

@@ -280,6 +280,10 @@ export default function ReportTab() {
 
     return (
         <div className="space-y-6">
+            <div>
+                <h2 className="text-2xl font-bold text-foreground mb-1">Reportes</h2>
+                <p className="text-muted-foreground">Genera y exporta informes</p>
+            </div>
             <Card>
                 <CardHeader>
                     <CardTitle>Generación de Reportes</CardTitle>

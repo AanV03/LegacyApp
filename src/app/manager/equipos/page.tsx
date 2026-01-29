@@ -28,6 +28,14 @@ export default async function Page() {
     redirect("/manager/inicio");
   }
 
-  // Authorized: render client UI
-  return <ClientEquipos />;
+  // Authorized: render client UI with header
+  return (
+    <>
+      <div>
+        <h2 className="text-2xl font-bold text-foreground mb-1">Equipos</h2>
+        <p className="text-muted-foreground">Administra miembros y roles</p>
+      </div>
+      <ClientEquipos />
+    </>
+  );
 }

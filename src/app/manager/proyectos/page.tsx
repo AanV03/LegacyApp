@@ -162,6 +162,10 @@ export default function ProjectTab() {
 
     return (
         <div className="space-y-4">
+            <div>
+                <h2 className="text-2xl font-bold text-foreground mb-1">Proyectos</h2>
+                <p className="text-muted-foreground">Administra proyectos y crea nuevos</p>
+            </div>
             {/* Tabla de Proyectos */}
             <Card>
                 <CardHeader className="flex flex-row items-center justify-between">

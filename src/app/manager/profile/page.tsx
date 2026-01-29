@@ -46,6 +46,10 @@ export default function ProfilePage() {
                     </div>
                 </div>
 
+                <div>
+                    <p className="text-sm text-muted-foreground">Mi Perfil — Actualiza tu información y configuración</p>
+                </div>
+
                 <div className="grid gap-4 sm:gap-6 lg:grid-cols-3">
                     <div className="lg:col-span-2">
                         <div className="bg-white rounded-lg border p-4 sm:p-6">

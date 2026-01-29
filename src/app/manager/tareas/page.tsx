@@ -483,6 +483,10 @@ export default function TaskTab() {
 
     return (
         <div className="space-y-4">
+            <div>
+                <h2 className="text-2xl font-bold text-foreground mb-1">Tareas</h2>
+                <p className="text-muted-foreground">Maneja y crea nuevas tareas</p>
+            </div>
             {stats && (
                 <div className="grid grid-cols-2 gap-2 md:grid-cols-4 md:gap-4">
                     <Card className="h-full">
