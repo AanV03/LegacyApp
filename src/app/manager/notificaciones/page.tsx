@@ -225,6 +225,14 @@ export default function NotificationTab() {
                             >
                                 <MessageSquare size={14} /> Comentarios
                             </Button>
+                            <Button
+                                variant={selectedFilter === "users" ? "default" : "outline"}
+                                onClick={() => setSelectedFilter("users")}
+                                size="sm"
+                                className="text-xs flex items-center gap-2"
+                            >
+                                <User size={14} /> Usuarios
+                            </Button>
                         </div>
 
                         {/* Notifications List */}

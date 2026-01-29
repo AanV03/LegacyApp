@@ -57,6 +57,10 @@ export function Topbar({ userName: initialUserName = "Usuario", onNotificationCl
         return "Proyecto creado";
       case "PROJECT_DELETED":
         return "Proyecto eliminado";
+      case "USER_REGISTERED":
+        return "Usuario registrado";
+      case "USER_DELETED":
+        return "Usuario eliminado";
       case "COMMENT_ADDED":
         return "Comentario añadido";
       default:
@@ -67,6 +71,7 @@ export function Topbar({ userName: initialUserName = "Usuario", onNotificationCl
   const getIconComponent = (type: string) => {
     if (type.includes("TASK")) return <Clipboard size={18} />;
     if (type.includes("PROJECT")) return <Folder size={18} />;
+    if (type.includes("USER")) return <User size={18} />;
     if (type.includes("COMMENT")) return <MessageSquare size={18} />;
     return <Bell size={18} />;
   };
